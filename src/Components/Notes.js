@@ -22,7 +22,7 @@ const Notes = () => {
   const [note, setNote] = useState({etitle: "",edescription: "", etag: ""})
 
   const handleClick = (e)=>{
-    console.log("Updating the note...", note)
+    // console.log("Updating the note...", note)
     editNote(note.id, note.etitle, note.edescription, note.etag)
     refClose.current.click()
   }
@@ -81,6 +81,8 @@ const Notes = () => {
                     name="etitle"
                     aria-describedby="emailHelp"
                     onChange={onChange}
+                    required
+                    minLength={5}
                   />
                 </div>
                 <div className="mb-3">
@@ -94,6 +96,8 @@ const Notes = () => {
                     id="edescription"
                     name="edescription"
                     onChange={onChange}
+                    required
+                    minLength={5}
                   />
                 </div>
                 <div className="mb-3">
@@ -107,6 +111,8 @@ const Notes = () => {
                     id="etag"
                     name="etag"
                     onChange={onChange}
+                    required
+                    minLength={2}
                   />
                 </div>
               </form>
@@ -120,7 +126,7 @@ const Notes = () => {
               >
                 Close
               </button>
-              <button type="button" className="btn btn-primary" onClick={handleClick}>
+              <button type="button" className="btn btn-primary" onClick={handleClick} disabled={note.etitle.length<5 || note.edescription.length<5 || note.etag.length<2}>
                 Update Note
               </button>
             </div>
@@ -128,8 +134,11 @@ const Notes = () => {
         </div>
       </div>
 
-      <div className="row">
+      <div className="row container mx-2 my-2">
         <h2 className="my-4">Your Notes</h2>
+        <div className="container">
+        {notes.length===0 && 'No Notes to display! Please add some Notes...'}
+        </div>
         {notes.map((note) => {
           return (
             <NoteItem key={note._id} updateNote={updateNote} note={note} />
