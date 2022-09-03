@@ -64,6 +64,7 @@ router.post(
     body("password", "Password cannot be blank").exists(),
   ],
   async (req, res) => {
+    let success = false
     //If error exists, then return bad request and error
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -74,11 +75,11 @@ router.post(
     try {
       let user = await User.findOne({ email });
       if (!user) {
-        return res.status(400).json({ error: "Invalid Credentials" });
+        return res.status(400).json({ success, error: "Invalid Credentials" });
       }
       const passwordCompare = await bcrypt.compare(password, user.password);
       if (!passwordCompare) {
-        return res.status(400).json({ error: "Invalid Credentials" });
+        return res.status(400).json({ success, error: "Invalid Credentials" });
       }
       const data = {
         user: {
@@ -86,7 +87,8 @@ router.post(
         },
       };
       const authToken = jwt.sign(data, JWT_SEC);
-      res.json({ authToken });
+      success = true
+      res.json({ success, authToken });
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Internal Server Error");
