@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-const Signup = () => {
+const Signup = (props) => {
   const [creds, setCreds] = useState({name: "", email: "", cpassword: "", password: ""})
   let history = useNavigate()
 
@@ -19,9 +19,15 @@ const Signup = () => {
       });
       const json = await response.json()
       console.log(json)
+      if (json.success){
         //save the token and redirect
         localStorage.setItem('token', json.authtoken)
         history("/")
+        props.showAlert("Signed in Successfully", "success")
+      }
+      else{
+        props.showAlert("Sign in Failed", "danger")
+      }
 }
 
 const onChange = (e)=>{
